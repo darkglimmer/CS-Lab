@@ -17,8 +17,8 @@
 
 
 using namespace std;
-void GenerateMap(TokenScanner & scan, int n, Map<Vector<string>,Vector<string>> map, Vector<string> key);
-void Generateword(string inital,Map<Vector<string>,Vector<string>> map,Vector<string> &res,int number);
+void GenerateMap(TokenScanner & scan, int n, Map<Vector<string>,Vector<string>> map, Vector<Vector<string>> &keys);
+void Generateword(Vector<string> & inital,Map<Vector<string>,Vector<string>> map,Vector<string> &res,int number);
 
 int main() {
     string name;
@@ -28,10 +28,10 @@ int main() {
     cout<<"This program makes random text based on a document."<<endl;
     cout<<"Give me an input file and an 'N' value for groups"<<endl;
     cout<<"of words, and I'll create random text for you."<<endl;
-
+    
     Map<Vector<string>,Vector<string>> map;
-    Vector<string> key;
-
+    Vector<Vector<string>> keys;
+    
     while (1) {
         cout << "Input file name?"  << endl;
         cin >> name;
@@ -44,7 +44,7 @@ int main() {
             infile.clear() ;
         }
     }
-
+    
     TokenScanner scanner(infile);
     scanner.ignoreWhitespace();
     while(1){
@@ -58,9 +58,9 @@ int main() {
         }
     }
     if(scanner.hasMoreTokens()){
-        GenerateMap(scanner,N,map,key);
+        GenerateMap(scanner,N,map,keys);
     }
-
+    
     while(1){
         cout << "# of random words to generate (0 to quit)?" << endl;
         int number;
@@ -72,47 +72,46 @@ int main() {
         int size = map.size();
         int start = randomInteger(0, size -1);
         Vector<string> res;
-        string inital = key[start];
-        res.add(inital);
-        Generateword(inital,map,res,number) ;
+        Vector<string> inital = keys[start];
+        res = inital;
+        Generateword(inital,map,res,number);
         cout << "...";
         for (int i = 0; i < res.size(); i++){
             cout << res[i] << " ";
         }
         cout << "..." << endl;
-        if (number != 1){
-            number = number -1;
-        }
-     }
+    }
     return 0;
 }
 
-void GenerateMap(TokenScanner & scan, int n, Map<Vector<string>,Vector<string>> map, Vector<string> key){
-    for(int i=1;i<n;i++){
+void GenerateMap(TokenScanner & scan, int n, Map<Vector<string>,Vector<string>> map, Vector<Vector<string>> &keys){
+    Vector<string> key;
+    string value = scan.nextToken();
+    while(value!=""){
         key.add(scan.nextToken());
-    }//examine sequences of 2 words
-    string value=scan.nextToken();//third word follows those two
+        value=scan.nextToken();
+    }
     Vector<string>mean;
     if(map.containsKey(key)){
         mean= map.get(key);
         mean.add(value);
         map.put(key,mean);
-     }
-     else {
+    }
+    else {
         mean.add(value);
         map.put(key,mean);
-     }
-}
-
-void Generateword(string inital,Map<Vector<string>,Vector<string>> map,Vector<string> &res,int number){
-    while (res.size() <= number){
-        Vector<string> former;
-        Vector<string> words;
-        words.add(inital);
-        former = map.get(words);
-        int point = randomInteger(0,former.size()-1);
-        res.add(former[point]);
-        words.remove(0);
-        inital = former[point];
+        keys.add(key);
     }
 }
+
+void Generateword(Vector<string> & inital,Map<Vector<string>,Vector<string>> map,Vector<string> &res,int number){
+    while (res.size() <= number){
+        Vector<string> former;
+        former = map.get(inital) ;
+        int point = randomInteger(0,former.size()-1);
+        res.add(former[point]);
+        former.remove(0);
+        inital.add(former[point]);
+    }
+}
+
