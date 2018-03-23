@@ -35,60 +35,55 @@ int main() {
         cin>>dic;
         infile.open(dic.c_str());
         if (infile.fail()){
-             cout<<"Unable to open that file.  Try again.";
-             infile.clear();
+            cout<<"Unable to open that file.  Try again.";
+            infile.clear();
         }
         else{
-             Lexicon dic;
-             break;
+            break;
         }
     }
-
+    Lexicon dictionary(dic);
     while (1){
         cout << "Word #1 (or Enter to quit):" << endl ;
         cin >> w1 ;
         cout << "Word #2 (or Enter to quit):" << endl ;
         cin >> w2 ;
-        Lexicon dic;
         if(w1[0] == 'Q'||w2[0] == 'Q'){
-           cout << "Have a nice day." << endl;
-           break;
+            cout << "Have a nice day." << endl;
+            break;
         }
         w1 = tolower(w1) ;
         w2 = tolower(w2) ;
-        if(dic.contains(w1) && dic.contains(w2)){
+        if(dictionary.contains(w1) && dictionary.contains(w2)){
             if(w1.length() == w2.length()){
                 if(w1 != w2){
-                    cout << "A ladder from " << w2 << " back to " << w1 << ":" << endl;
                     Queue<Stack<string>> queue;
                     Stack<string> first;
                     Stack<string> stack;
                     Stack<string> result;
-                    first.push(w1);
+                    first.add(w1);
                     queue.enqueue(first);
                     while(!queue.isEmpty()){
-                        stack = queue.dequeue();
-                        string word = stack.peek();
+                        Stack<string> way = queue.dequeue();
+                        string word = way.peek();//first
                         for(int i = 0;i < word.length();i++){
                             string ladder = word;
                             for(int n=97;n<=122;n++){
                                 ladder[i]=n;
-                                if(dic.contains(ladder))
-                                    stack.push(ladder);
-                                    dic.remove(ladder);
+                                if(dictionary.contains(ladder)){
+                                    way.add(ladder);
+                                    dictionary.remove(ladder);
                                     if(ladder==w2){
-                                         result = stack;
+                                        result = way;
                                     }
-                                    stack.push(ladder);
-                                    queue.enqueue(stack);
-                                    string used=stack.pop();
+                                    stack.add(ladder);
+                                    queue.enqueue(way);
+                                    way.pop();
                                 }
                             }
                         }
-                    if(!result.isEmpty()){
-                       outputword(result,w1,w2);
-                       break;
                     }
+                    outputword(result,w1,w2);
                 }
                 else{
                     cout<<"The two words must be different.";
@@ -121,3 +116,4 @@ void outputword(Stack<string>result,string w1,string w2){
         }
     }
 }
+
