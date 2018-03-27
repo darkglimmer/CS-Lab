@@ -18,7 +18,7 @@
 
 using namespace std;
 void GenerateMap(TokenScanner & scan, int n, Map<Vector<string>,Vector<string>> map, Vector<Vector<string>> &keys);
-void Generateword(Vector<string> & inital,Map<Vector<string>,Vector<string>> map,Vector<string> &res,int number);
+void Generateword(string inital,Map<Vector<string>,Vector<string>> map,Vector<string> &res,int number);
 
 int main() {
     string name;
@@ -72,8 +72,8 @@ int main() {
         int size = map.size();
         int start = randomInteger(0, size -1);
         Vector<string> res;
-        Vector<string> inital = keys[start];
-        res = inital;
+        string inital = keys[start];
+        res.add(map.get(inital));
         Generateword(inital,map,res,number);
         cout << "...";
         for (int i = 0; i < res.size(); i++){
@@ -87,31 +87,37 @@ int main() {
 void GenerateMap(TokenScanner & scan, int n, Map<Vector<string>,Vector<string>> map, Vector<Vector<string>> &keys){
     Vector<string> key;
     string value = scan.nextToken();
-    while(value!=""){
-        key.add(scan.nextToken());
+    for(int i = 0; i < n; i++){
+        key.add(value);
         value=scan.nextToken();
     }
     Vector<string>mean;
-    if(map.containsKey(key)){
-        mean= map.get(key);
-        mean.add(value);
-        map.put(key,mean);
+    while(1){
+        value=scan.nextToken();
+        if(map.containsKey(key)){
+            mean.add(value);
+            map.put(key,mean);
+        }
+        else {
+            mean.add(value);
+            map.put(key,mean);
+            keys.add(key);
+        }
+        key.pop();
+        key.add(value);
+        
     }
-    else {
-        mean.add(value);
-        map.put(key,mean);
-        keys.add(key);
-    }
+    
 }
 
-void Generateword(Vector<string> & inital,Map<Vector<string>,Vector<string>> map,Vector<string> &res,int number){
+void Generateword(string inital,Map<Vector<string>,Vector<string>> map,Vector<string> &res,int number){
     while (res.size() <= number){
         Vector<string> former;
-        former = map.get(inital) ;
+        former = map.get(inital);
         int point = randomInteger(0,former.size()-1);
+        inital = former[point];
         res.add(former[point]);
         former.remove(0);
-        inital.add(former[point]);
+        
     }
 }
-
