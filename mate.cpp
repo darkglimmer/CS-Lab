@@ -78,6 +78,10 @@ void personalCurriculum(Map<string, Vector<string>> & prereqMap,string goal){
                 printed.put(prereqMap.get(goal).get(i), 1);
             }
         }
+        if(!printed.containsKey(goal)){
+            cout << goal << endl;
+        }
+        printed.put(goal,1);
     }
 }
 
