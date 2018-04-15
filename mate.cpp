@@ -37,12 +37,10 @@ void serpinskii(GWindow &w, int leftX, int leftY, int size, int order) {
         w.drawLine(size / 2 + leftX, size * sqrt(3) / 2 + leftY, leftX, leftY);
     }
     else{
-        w.drawLine(leftX + size / 2, leftY, leftX + size / 4, leftY + (sqrt(3) * size) / 4);
-        w.drawLine(leftX + size / 2, leftY, leftX + 3 * size / 4, leftY + (sqrt(3) * size) / 4);
-        w.drawLine(leftX + size / 4, leftY + (sqrt(3) * size) / 4, leftX + size / 2, leftY + (sqrt(3) * size) / 4);
-        serpinskii(w, leftX, leftY, size / 2, order - 1 ) ;
-        serpinskii(w, leftX + size / 2, leftY, size / 2, order - 1 ) ;
-        serpinskii(w, leftX + size / 4, leftY + size * sqrt(3) / 4, size / 2, order - 1 ) ;
+        serpinskii(w, leftX, leftY, size / 2, order - 1);
+        serpinskii(w, leftX + size / 2, leftY, size / 2, order - 1);
+        serpinskii(w, leftX + size / 4, leftY + sqrt(3) / 4 * size, size / 2, order - 1);
+        //画倒三角，防止重复划线
     }
 }
 
