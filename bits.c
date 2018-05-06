@@ -163,7 +163,7 @@ int getByte(int x, int n) {
  *   Rating: 3 
  */
 int logicalShift(int x, int n) {
-    return (x >> n) & (~((0x1 << 31) >> n << 1));
+    return (x >> n) & (~((1 << 31) >> n << 1));
 }
 /*
  * bitCount - returns count of number of 1's in word
@@ -199,7 +199,6 @@ int bang(int x) {
  *   Rating: 1
  */
 int tmin(void) {
-    return 1 << 31;
 }
 /*
  * fitsBits - return 1 if x can be represented as an
